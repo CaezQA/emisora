@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta de Gustos Musicales</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .contenedor {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px 0;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+        }
+        .descripcion {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        .menu {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .btn-menu {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #3498db;
+            color: white;
+            min-width: 180px;
+        }
+        .btn-menu:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        .btn-menu.activo {
+            background-color: #2c3e50;
+        }
+        .seccion {
+            display: none;
+            margin-top: 20px;
+        }
+        .seccion.activa {
+            display: block;
+        }
+        .formulario {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .grupo-formulario {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        .canciones {
+            grid-column: span 2;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+        .cancion {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .titulo-cancion {
+            grid-column: span 2;
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .botones-formulario {
+            grid-column: span 2;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-principal {
+            background-color: #3498db;
+            color: white;
+        }
+        .btn-principal:hover {
+            background-color: #2980b9;
+        }
+        .btn-secundario {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .btn-secundario:hover {
+            background-color: #c0392b;
+        }
+        .tabla {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .tabla th, .tabla td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .tabla th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        .tabla tr:hover {
+            background-color: #f1f8ff;
+        }
+        .mensaje {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+        .mensaje.error {
+            background-color: #ffeaea;
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+        .mensaje.exito {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #2e7d32;
+        }
+        .mensaje.info {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #1565c0;
+        }
+        .ganador-rifa {
+            text-align: center;
+            padding: 30px;
+            background-color: #e8f5e9;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .nombre-ganador {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2e7d32;
+            margin: 15px 0;
+        }
+        .info-ganador {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        .contador {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+        .tarjeta-persona {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .tarjeta-titulo {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .tarjeta-datos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .tarjeta-dato {
+            margin-bottom: 10px;
+        }
+        .tarjeta-dato strong {
+            color: #2c3e50;
+        }
+        .tarjeta-canciones {
+            margin-top: 15px;
+        }
+        .cancion-item {
+            background-color: #e3f2fd;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .cancion-artista {
+            font-weight: 500;
+        }
+        @media (max-width: 768px) {
+            .formulario {
+                grid-template-columns: 1fr;
+            }
+            .canciones, .botones-formulario {
+                grid-column: span 1;
+            }
+            .menu {
+                flex-direction: column;
+                align-items: center;
+            }
+            .btn-menu {
+                width: 100%;
+            }
+            .tarjeta-datos {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <h1>Encuesta de Gustos Musicales</h1>
+        <p class="descripcion">Registro de 6 personas para conocer sus preferencias musicales</p>
+        
+        <div class="menu">
+            <button class="btn-menu activo" onclick="mostrarSeccion('registrar')">Registrar Persona</button>
+            <button class="btn-menu" onclick="mostrarSeccion('mostrar')">Mostrar Personas</button>
+            <button class="btn-menu" onclick="mostrarSeccion('canciones')">Canciones Favoritas</button>
+            <button class="btn-menu" onclick="mostrarSeccion('rifa')">Realizar Rifa</button>
+        </div>
+        
+        <div id="mensaje" class="mensaje" style="display: none;"></div>
+        
+        <!-- Sección de Registro -->
+        <div id="registrar" class="seccion activa">
+            <h2>Registrar Nueva Persona</h2>
+            <div class="contador" id="contador-registro">Personas registradas: 0/6</div>
+            
+            <form id="formulario-persona" class="formulario">
+                <div class="grupo-formulario">
+                    <label for="nombre">Nombre completo *</label>
+                    <input type="text" id="nombre" required>
+                </div>
+                
+                <div class="grupo-formulario">
+                    <label for="cedula">Número de cédula *</label>
+                    <input type="text" id="cedula" required>
+                </div>
+                
+                <div class="grupo-formulario">
+                    <label for="fecha-nacimiento">Fecha de nacimiento *</label>
+                    <input type="date" id="fecha-nacimiento" required>
+                </div>
+                
+                <div class="grupo-formulario">
+                    <label for="email">Correo electrónico *</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="grupo-formulario">
+                    <label for="ciudad-residencia">Ciudad de residencia *</label>
+                    <input type="text" id="ciudad-residencia" required>
+                </div>
+                
+                <div class="grupo-formulario">
+                    <label for="ciudad-origen">Ciudad de origen *</label>
+                    <input type="text" id="ciudad-origen" required>
+                </div>
+                
+                <div class="canciones">
+                    <h3>Canciones Favoritas (máximo 3)</h3>
+                    
+                    <div class="cancion">
+                        <div class="titulo-cancion">Canción 1</div>
+                        <div class="grupo-formulario">
+                            <label for="artista1">Artista</label>
+                            <input type="text" id="artista1">
+                        </div>
+                        <div class="grupo-formulario">
+                            <label for="cancion1">Título de la canción</label>
+                            <input type="text" id="cancion1">
+                        </div>
+                    </div>
+                    
+                    <div class="cancion">
+                        <div class="titulo-cancion">Canción 2</div>
+                        <div class="grupo-formulario">
+                            <label for="artista2">Artista</label>
+                            <input type="text" id="artista2">
+                        </div>
+                        <div class="grupo-formulario">
+                            <label for="cancion2">Título de la canción</label>
+                            <input type="text" id="cancion2">
+                        </div>
+                    </div>
+                    
+                    <div class="cancion">
+                        <div class="titulo-cancion">Canción 3</div>
+                        <div class="grupo-formulario">
+                            <label for="artista3">Artista</label>
+                            <input type="text" id="artista3">
+                        </div>
+                        <div class="grupo-formulario">
+                            <label for="cancion3">Título de la canción</label>
+                            <input type="text" id="cancion3">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="botones-formulario">
+                    <button type="submit" class="btn btn-principal">Registrar Persona</button>
+                    <button type="reset" class="btn btn-secundario">Limpiar Formulario</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Sección de Mostrar Personas -->
+        <div id="mostrar" class="seccion">
+            <h2>Personas Registradas</h2>
+            <div class="contador" id="contador-mostrar">Total de personas registradas: 0</div>
+            
+            <div id="lista-personas">
+                <!-- Las tarjetas de personas se insertarán aquí mediante JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Sección de Canciones Favoritas -->
+        <div id="canciones" class="seccion">
+            <h2>Canciones Favoritas</h2>
+            <div class="contador" id="contador-canciones">Total de personas registradas: 0</div>
+            
+            <div id="lista-canciones">
+                <!-- Los datos se insertarán aquí mediante JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Sección de Rifa -->
+        <div id="rifa" class="seccion">
+            <h2>Realizar Rifa</h2>
+            <div class="contador" id="contador-rifa">Personas participantes: 0</div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <button class="btn btn-principal" onclick="realizarRifa()">Realizar Sorteo</button>
+            </div>
+            
+            <div id="resultado-rifa" class="ganador-rifa" style="display: none;">
+                <h3>¡Felicidades al ganador!</h3>
+                <div class="nombre-ganador" id="nombre-ganador"></div>
+                <div class="info-ganador" id="info-ganador"></div>
+                <p>Se ha enviado un correo electrónico con los detalles del premio.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Array para almacenar las personas registradas
+        let personas = [];
+        
+        // Elementos del DOM
+        const mensaje = document.getElementById('mensaje');
+        const contadorRegistro = document.getElementById('contador-registro');
+        const contadorMostrar = document.getElementById('contador-mostrar');
+        const contadorCanciones = document.getElementById('contador-canciones');
+        const contadorRifa = document.getElementById('contador-rifa');
+        const listaPersonas = document.getElementById('lista-personas');
+        const listaCanciones = document.getElementById('lista-canciones');
+        
+        // Mostrar sección específica y actualizar contadores
+        function mostrarSeccion(seccionId) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.seccion').forEach(seccion => {
+                seccion.classList.remove('activa');
+            });
+            
+            // Desactivar todos los botones del menú
+            document.querySelectorAll('.btn-menu').forEach(boton => {
+                boton.classList.remove('activo');
+            });
+            
+            // Mostrar la sección seleccionada y activar su botón
+            document.getElementById(seccionId).classList.add('activa');
+            document.querySelector(`.btn-menu[onclick="mostrarSeccion('${seccionId}')"]`).classList.add('activo');
+            
+            // Actualizar contadores
+            actualizarContadores();
+            
+            // Si es la sección de mostrar, actualizar la lista
+            if (seccionId === 'mostrar') {
+                actualizarListaPersonas();
+            }
+            
+            // Si es la sección de canciones, actualizar la lista
+            if (seccionId === 'canciones') {
+                actualizarListaCanciones();
+            }
+        }
+        
+        // Actualizar contadores en todas las secciones
+        function actualizarContadores() {
+            contadorRegistro.textContent = `Personas registradas: ${personas.length}/6`;
+            contadorMostrar.textContent = `Total de personas registradas: ${personas.length}`;
+            contadorCanciones.textContent = `Total de personas registradas: ${personas.length}`;
+            contadorRifa.textContent = `Personas participantes: ${personas.length}`;
+        }
+        
+        // Calcular edad a partir de la fecha de nacimiento
+        function calcularEdad(fechaNacimiento) {
+            const hoy = new Date();
+            const nacimiento = new Date(fechaNacimiento);
+            let edad = hoy.getFullYear() - nacimiento.getFullYear();
+            const mes = hoy.getMonth() - nacimiento.getMonth();
+            
+            if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+                edad--;
+            }
+            
+            return edad;
+        }
+        
+        // Mostrar mensaje en la interfaz
+        function mostrarMensaje(texto, tipo) {
+            mensaje.textContent = texto;
+            mensaje.className = `mensaje ${tipo}`;
+            mensaje.style.display = 'block';
+            
+            // Ocultar el mensaje después de 5 segundos
+            setTimeout(() => {
+                mensaje.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Registrar una nueva persona
+        document.getElementById('formulario-persona').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Verificar si ya se registraron 6 personas
+            if (personas.length >= 6) {
+                mostrarMensaje('Ya se han registrado 6 personas. No es posible agregar más.', 'error');
+                return;
+            }
+            
+            // Obtener valores del formulario
+            const nombre = document.getElementById('nombre').value;
+            const cedula = document.getElementById('cedula').value;
+            const fechaNacimiento = document.getElementById('fecha-nacimiento').value;
+            const email = document.getElementById('email').value;
+            const ciudadResidencia = document.getElementById('ciudad-residencia').value;
+            const ciudadOrigen = document.getElementById('ciudad-origen').value;
+            
+            // Verificar si la cédula ya está registrada
+            if (personas.some(persona => persona.cedula === cedula)) {
+                mostrarMensaje('Esta cédula ya está registrada.', 'error');
+                return;
+            }
+            
+            // Recopilar canciones favoritas
+            const cancionesFavoritas = [];
+            for (let i = 1; i <= 3; i++) {
+                const artista = document.getElementById(`artista${i}`).value;
+                const cancion = document.getElementById(`cancion${i}`).value;
+                
+                if (artista && cancion) {
+                    cancionesFavoritas.push({ artista, cancion });
+                }
+            }
+            
+            // Crear objeto persona
+            const persona = {
+                nombre,
+                cedula,
+                fechaNacimiento,
+                email,
+                ciudadResidencia,
+                ciudadOrigen,
+                cancionesFavoritas
+            };
+            
+            // Agregar persona al array
+            personas.push(persona);
+            
+            // Mostrar mensaje de éxito
+            mostrarMensaje(`Persona registrada correctamente. Total: ${personas.length}/6`, 'exito');
+            
+            // Reiniciar formulario
+            this.reset();
+            
+            // Actualizar contadores
+            actualizarContadores();
+        });
+        
+        // Actualizar lista de personas
+        function actualizarListaPersonas() {
+            listaPersonas.innerHTML = '';
+            
+            if (personas.length === 0) {
+                listaPersonas.innerHTML = '<p class="mensaje info">No hay personas registradas.</p>';
+                return;
+            }
+            
+            personas.forEach((persona, indice) => {
+                const tarjeta = document.createElement('div');
+                tarjeta.className = 'tarjeta-persona';
+                
+                const edad = calcularEdad(persona.fechaNacimiento);
+                
+                let cancionesHTML = '';
+                if (persona.cancionesFavoritas.length > 0) {
+                    cancionesHTML = '<div class="tarjeta-canciones"><h4>Canciones Favoritas:</h4>';
+                    persona.cancionesFavoritas.forEach(cancion => {
+                        cancionesHTML += `
+                            <div class="cancion-item">
+                                <div class="cancion-artista">${cancion.artista}</div>
+                                <div>${cancion.cancion}</div>
+                            </div>
+                        `;
+                    });
+                    cancionesHTML += '</div>';
+                } else {
+                    cancionesHTML = '<p>No tiene canciones favoritas registradas.</p>';
+                }
+                
+                tarjeta.innerHTML = `
+                    <h3 class="tarjeta-titulo">${persona.nombre}</h3>
+                    <div class="tarjeta-datos">
+                        <div class="tarjeta-dato"><strong>Cédula:</strong> ${persona.cedula}</div>
+                        <div class="tarjeta-dato"><strong>Edad:</strong> ${edad} años</div>
+                        <div class="tarjeta-dato"><strong>Email:</strong> ${persona.email}</div>
+                        <div class="tarjeta-dato"><strong>Residencia:</strong> ${persona.ciudadResidencia}</div>
+                        <div class="tarjeta-dato"><strong>Origen:</strong> ${persona.ciudadOrigen}</div>
+                        <div class="tarjeta-dato"><strong>Posición:</strong> ${indice + 1}</div>
+                    </div>
+                    ${cancionesHTML}
+                `;
+                
+                listaPersonas.appendChild(tarjeta);
+            });
+        }
+        
+        // Actualizar lista de canciones
+        function actualizarListaCanciones() {
+            listaCanciones.innerHTML = '';
+            
+            if (personas.length === 0) {
+                listaCanciones.innerHTML = '<p class="mensaje info">No hay personas registradas.</p>';
+                return;
+            }
+            
+            // Contar canciones favoritas
+            const todasCanciones = [];
+            personas.forEach(persona => {
+                persona.cancionesFavoritas.forEach(cancion => {
+                    todasCanciones.push(cancion);
+                });
+            });
+            
+            if (todasCanciones.length === 0) {
+                listaCanciones.innerHTML = '<p class="mensaje info">No hay canciones favoritas registradas.</p>';
+                return;
+            }
+            
+            // Contar frecuencia de canciones
+            const frecuenciaCanciones = {};
+            todasCanciones.forEach(cancion => {
+                const clave = `${cancion.artista} - ${cancion.cancion}`;
+                frecuenciaCanciones[clave] = (frecuenciaCanciones[clave] || 0) + 1;
+            });
+            
+            // Ordenar por frecuencia
+            const cancionesOrdenadas = Object.entries(frecuenciaCanciones)
+                .sort((a, b) => b[1] - a[1])
+                .map(entry => {
+                    return {
+                        nombre: entry[0],
+                        frecuencia: entry[1]
+                    };
+                });
+            
+            // Mostrar ranking
+            cancionesOrdenadas.forEach((cancion, index) => {
+                const elemento = document.createElement('div');
+                elemento.className = 'tarjeta-persona';
+                elemento.innerHTML = `
+                    <h3 class="tarjeta-titulo">#${index + 1} - ${cancion.nombre}</h3>
+                    <div class="tarjeta-datos">
+                        <div class="tarjeta-dato"><strong>Veces mencionada:</strong> ${cancion.frecuencia}</div>
+                        <div class="tarjeta-dato"><strong>Porcentaje:</strong> ${((cancion.frecuencia / todasCanciones.length) * 100).toFixed(1)}%</div>
+                    </div>
+                `;
+                listaCanciones.appendChild(elemento);
+            });
+        }
+        
+        // Realizar rifa
+        function realizarRifa() {
+            if (personas.length === 0) {
+                mostrarMensaje('No hay personas registradas para realizar la rifa.', 'error');
+                return;
+            }
+            
+            // Seleccionar ganador aleatorio
+            const indiceGanador = Math.floor(Math.random() * personas.length);
+            const ganador = personas[indiceGanador];
+            
+            // Mostrar resultado
+            document.getElementById('nombre-ganador').textContent = ganador.nombre;
+            document.getElementById('info-ganador').innerHTML = `
+                <strong>Cédula:</strong> ${ganador.cedula} <br>
+                <strong>Email:</strong> ${ganador.email} <br>
+                <strong>Ciudad:</strong> ${ganador.ciudadResidencia}
+            `;
+            
+            document.getElementById('resultado-rifa').style.display = 'block';
+            
+            mostrarMensaje('¡Rifa realizada con éxito!', 'exito');
+        }
+        
+        // Inicializar la aplicación
+        actualizarContadores();
+    </script>
+</body>
+</html>
